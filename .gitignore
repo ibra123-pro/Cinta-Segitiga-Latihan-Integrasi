@@ -1,0 +1,9 @@
+mlruns/
+.mlflow/
+__pycache__/
+.conda/
+.venv/
+.vscode/
+credit_scoring_docker/
+mlartifacts/
+model/
