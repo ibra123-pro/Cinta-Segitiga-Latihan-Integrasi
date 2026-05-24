@@ -12,6 +12,7 @@ env:
   # Diubah agar langsung menunjuk ke file CSV di root repositori
   CSV_URL: "train_pca.csv"
   TARGET_VAR: "Credit_Score"
+  MLFLOW_EXPERIMENT_NAME: "credit_scoring_experiment"
 
 jobs:
   build:
