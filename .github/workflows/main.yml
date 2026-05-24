@@ -43,9 +43,23 @@ jobs:
           
       - name: Get latest MLflow run_id
         run: |
-          RUN_ID=$(ls -td mlruns/0/*/ | head -n 1 | cut -d'/' -f3)
+          # Menggunakan script Python untuk mengambil Run ID terakhir dari eksperimen aktif
+          RUN_ID=$(python -c "
+          import mlflow
+          client = mlflow.tracking.MlflowClient()
+          exp = client.get_experiment_by_name('${{ env.MLFLOW_EXPERIMENT_NAME }}')
+          runs = client.search_runs(experiment_ids=[exp.experiment_id], order_by=['attributes.start_time DESC'], max_results=1)
+          if runs: print(runs[0].info.run_id)
+          ")
+          
+          # Validasi jika RUN_ID kosong agar tidak lanjut ke proses build docker yang pasti gagal
+          if [ -z "$RUN_ID" ]; then
+            echo "Error: Run ID tidak ditemukan!"
+            exit 1
+          fi
+          
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
-          echo "Latest run_id: $RUN_ID"
+          echo "Latest run_id berhasil didapat: $RUN_ID"
           
       - name: Build Docker Model
         run: |
