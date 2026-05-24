@@ -9,7 +9,8 @@ on:
       - main
 
 env:
-  CSV_URL: "MLproject/train_pca.csv"
+  # Diubah agar langsung menunjuk ke file CSV di root repositori
+  CSV_URL: "train_pca.csv"
   TARGET_VAR: "Credit_Score"
 
 jobs:
@@ -36,7 +37,8 @@ jobs:
           
       - name: Run mlflow project
         run: |
-          mlflow run MLproject --env-manager=local
+          # Menggunakan titik (.) karena file MLproject berada di root folder saat ini
+          mlflow run . --env-manager=local
           
       - name: Get latest MLflow run_id
         run: |
